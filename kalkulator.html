@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kalkulator dengan Persentase dan Hapus Satu</title>
+    <title>Kalkulator dengan Negatif dan Persen</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -98,7 +98,7 @@
             <button onclick="inputAngka('3')">3</button>
             <button class="operator" onclick="inputOperator('-')">−</button>
             <button onclick="inputAngka('0')">0</button>
-            <button onclick="inputAngka('.')">.</button>
+            <button onclick="ubahTanda()">±</button>
             <button class="clear" onclick="clearLayar()">C</button>
             <button class="operator" onclick="inputOperator('+')">+</button>
             <button class="backspace" onclick="hapusSatu()">⌫</button>
@@ -110,8 +110,6 @@
     <script>
         let layar = document.getElementById('layar');
         let ekspresi = '';
-        let bilangan1 = '';
-        let bilangan2 = '';
         let operator = '';
 
         function inputAngka(angka) {
@@ -120,83 +118,92 @@
         }
 
         function inputOperator(op) {
-            if (!operator) {
-                bilangan1 = ekspresi;
-                operator = op;
+            if (ekspresi !== '' && !['+', '-', '*', '/'].includes(ekspresi.slice(-1))) {
                 ekspresi += op;
+                operator = op;
                 layar.value = ekspresi;
             }
         }
 
         function clearLayar() {
             ekspresi = '';
-            bilangan1 = '';
-            bilangan2 = '';
             operator = '';
             layar.value = '';
         }
 
         function hapusSatu() {
             if (ekspresi.length > 0) {
-                ekspresi = ekspresi.slice(0, -1); // Hapus karakter terakhir
+                ekspresi = ekspresi.slice(0, -1);
+                layar.value = ekspresi;
+            }
+        }
+
+        function ubahTanda() {
+            if (ekspresi !== '') {
+                let lastOperatorIndex = Math.max(
+                    ekspresi.lastIndexOf('+'),
+                    ekspresi.lastIndexOf('-'),
+                    ekspresi.lastIndexOf('*'),
+                    ekspresi.lastIndexOf('/')
+                );
+
+                if (lastOperatorIndex === -1) {
+                    ekspresi = ekspresi[0] === '-' ? ekspresi.slice(1) : '-' + ekspresi;
+                } else {
+                    let beforeLastOperator = ekspresi.slice(0, lastOperatorIndex + 1);
+                    let lastNumber = ekspresi.slice(lastOperatorIndex + 1);
+
+                    lastNumber = lastNumber[0] === '-' ? lastNumber.slice(1) : '-' + lastNumber;
+
+                    ekspresi = beforeLastOperator + lastNumber;
+                }
+
                 layar.value = ekspresi;
             }
         }
 
         function hitung() {
             try {
-                let splitEkspresi = ekspresi.split(/[\+\-\*\/]/);
-                bilangan1 = parseFloat(splitEkspresi[0]);
-                bilangan2 = parseFloat(splitEkspresi[1]);
-
-                let hasil;
-                switch (operator) {
-                    case '+':
-                        hasil = bilangan1 + bilangan2;
-                        break;
-                    case '-':
-                        hasil = bilangan1 - bilangan2;
-                        break;
-                    case '*':
-                        hasil = bilangan1 * bilangan2;
-                        break;
-                    case '/':
-                        hasil = bilangan1 / bilangan2;
-                        break;
-                    default:
-                        hasil = 'Error';
-                        break;
-                }
-
-                layar.value = hasil;
-                ekspresi = hasil.toString();
-                bilangan1 = '';
-                bilangan2 = '';
-                operator = '';
+                ekspresi = eval(ekspresi);
+                layar.value = ekspresi;
             } catch (error) {
                 layar.value = 'Error';
                 ekspresi = '';
             }
         }
 
-        function hitungPersentase() {
-            try {
-                if (!operator) {
-                    bilangan1 = parseFloat(ekspresi) / 100;
-                    ekspresi = bilangan1.toString();
-                    layar.value = ekspresi;
-                } else {
-                    let splitEkspresi = ekspresi.split(/[\+\-\*\/]/);
-                    bilangan1 = parseFloat(splitEkspresi[0]);
-                    bilangan2 = parseFloat(splitEkspresi[1]) || 0;
-                    bilangan2 = (bilangan1 * bilangan2) / 100;
-                    ekspresi = `${bilangan1}${operator}${bilangan2}`;
-                    layar.value = ekspresi;
-                }
-            } catch (error) {
-                layar.value = 'Error';
-                ekspresi = '';
-            }
+        // function hitungPersentase() {
+        //     let angka = ekspresi.trim();
+        //     let bilangan1, bilangan2;
+            
+        //     if (angka.startsWith('-')) {
+        //         // Jika bilangan pertama negatif, pisahkan dan ambil tanda
+        //         angka = angka.slice(1);
+        //         bilangan1 = 0;
+        //     } else {
+        //         bilangan1 = parseFloat(angka);
+        //     }
+
+        //     // Jika ekspresi sudah mengandung operator, hitung persen
+            function hitungPersentase() {
+    try {
+        if (!operator) {
+            bilangan1 = parseFloat(ekspresi) / 100;
+            ekspresi = bilangan1.toString();
+            layar.value = ekspresi;
+        } else {
+            let splitEkspresi = ekspresi.split(/[\+\-\*\/]/);
+            bilangan1 = parseFloat(splitEkspresi[0]);
+            bilangan2 = parseFloat(splitEkspresi[1]) || 0;
+            bilangan2 = (bilangan1 * bilangan2) / 100;
+            ekspresi = `${bilangan1}${operator}${bilangan2}`;
+            layar.value = ekspresi;
+        }
+    } catch (error) {
+        layar.value = 'Error';
+        ekspresi = '';
+    }
+
         }
     </script>
 </body>
