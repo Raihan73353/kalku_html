@@ -16,6 +16,6 @@ Berikut adalah gambaran kalkulatornya: >
 ![image](https://github.com/user-attachments/assets/596ef096-6487-4d8a-9e10-592481fdb06a)
 
 Foto Pembuat:
-<img src="
-![WhatsApp Image 2025-02-13 at 09 57 30_07ac2407](https://github.com/user-attachments/assets/ac0c799e-a2d5-48d7-abf6-4966bf1d901e)">
+
+![WhatsApp Image 2025-02-13 at 09 57 30_07ac2407](https://github.com/user-attachments/assets/ac0c799e-a2d5-48d7-abf6-4966bf1d901e)
 
